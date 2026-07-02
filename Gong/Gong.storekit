@@ -1,0 +1,33 @@
+{
+  "identifier" : "8F4A2C6E-1B7D-4E9A-9C3F-2D8B5A7E1F04",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "999.99",
+      "familyShareable" : false,
+      "internalID" : "3A9D7B21-6C4E-48F0-B5A2-9E1C8D3F6A75",
+      "localizations" : [
+        {
+          "description" : "24-karat finish, the Aurum voice, golden radiance, and the Élite crest. Forever.",
+          "displayName" : "Gong Élite",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.moonshineai.gong.elite999",
+      "referenceName" : "Gong Elite Upgrade",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
