@@ -22,6 +22,7 @@ final class GongSoundEngine {
     private struct Voice {
         let player: AVAudioPlayerNode
         let pitch: AVAudioUnitTimePitch
+        let filter: AVAudioUnitEQ
     }
 
     private var voices: [Voice] = []
@@ -68,11 +69,19 @@ final class GongSoundEngine {
         for _ in 0..<8 {
             let player = AVAudioPlayerNode()
             let pitch = AVAudioUnitTimePitch()
+            let filter = AVAudioUnitEQ(numberOfBands: 1)
+            if let band = filter.bands.first {
+                band.filterType = .lowPass
+                band.frequency = 9_000
+                band.bypass = false
+            }
             engine.attach(player)
             engine.attach(pitch)
+            engine.attach(filter)
             engine.connect(player, to: pitch, format: renderFormat)
-            engine.connect(pitch, to: submix, format: renderFormat)
-            voices.append(Voice(player: player, pitch: pitch))
+            engine.connect(pitch, to: filter, format: renderFormat)
+            engine.connect(filter, to: submix, format: renderFormat)
+            voices.append(Voice(player: player, pitch: pitch, filter: filter))
         }
 
         engine.connect(submix, to: reverb, format: renderFormat)
@@ -115,6 +124,12 @@ final class GongSoundEngine {
         let wobble = Float.random(in: -22...22)
         voice.pitch.pitch = (elite ? 230 : 0) + wobble
         voice.player.volume = Float(0.30 + 0.70 * clamped)
+
+        // A soft mallet excites fewer high partials: gentle strikes are
+        // rounder and darker, hard strikes release the full shimmer.
+        if let band = voice.filter.bands.first {
+            band.frequency = Float(900 + 8_600 * pow(clamped, 1.6))
+        }
 
         voice.player.stop()
         voice.player.scheduleBuffer(buffer, at: nil, options: [], completionHandler: nil)

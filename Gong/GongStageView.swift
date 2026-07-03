@@ -8,7 +8,10 @@ struct GongStageView: View {
 
     @ObservedObject var model: GongModel
     let elite: Bool
+    let launchDate: Date
     let onStrike: (Double) -> Void
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         GeometryReader { geo in
@@ -18,15 +21,48 @@ struct GongStageView: View {
                 let radius = min(size.width, size.height * 0.72) * 0.36
                 let center = CGPoint(x: size.width / 2, y: size.height * 0.54)
                 let finish = Theme.finish(elite: elite)
-                let wobble = model.wobbleAngle(at: now)
-                let shimmerTime = Float(now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 600))
+                let absoluteTime = now.timeIntervalSinceReferenceDate
+
+                // The unveiling: the instrument materializes over the first
+                // moments after launch.
+                let sinceLaunch = now.timeIntervalSince(launchDate)
+                let revealRaw = min(max(sinceLaunch / 1.8, 0), 1)
+                let reveal = 1 - pow(1 - revealRaw, 3)
+
+                // The instrument is never perfectly still: a barely
+                // perceptible sway, as if the air itself were moving.
+                let idleSway = reduceMotion ? 0 : 0.7 * sin(absoluteTime * 0.4)
+                let wobble = model.wobbleAngle(at: now) + idleSway
+                let shimmerTime = reduceMotion
+                    ? Float(0)
+                    : Float(absoluteTime.truncatingRemainder(dividingBy: 600))
 
                 ZStack {
-                    DustCanvas(now: now)
+                    if !reduceMotion {
+                        DustCanvas(now: now)
+                            .opacity(reveal)
+                    }
+
+                    // Breathing aura behind the instrument.
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                gradient: Gradient(colors: [finish.ringGlow.opacity(0.22), .clear]),
+                                center: .center,
+                                startRadius: radius * 0.2,
+                                endRadius: radius * 1.9
+                            )
+                        )
+                        .frame(width: radius * 3.8, height: radius * 3.8)
+                        .position(center)
+                        .opacity(reveal * (reduceMotion ? 0.7 : 0.55 + 0.45 * sin(absoluteTime * 0.5)))
+                        .blendMode(.screen)
+                        .allowsHitTesting(false)
 
                     // Gilded suspension beam.
                     BeamView(width: size.width, finish: finish)
                         .position(x: size.width / 2, y: 14)
+                        .opacity(reveal)
 
                     // Ropes + gong swing together about the beam line.
                     ZStack {
@@ -36,7 +72,7 @@ struct GongStageView: View {
                             .position(x: center.x + radius * 0.56, y: (center.y - radius * 0.82 - 18) / 2 + 18)
 
                         GongFaceView(finish: finish, diameter: radius * 2, shimmerTime: shimmerTime)
-                            .scaleEffect(model.strikeScale(at: now))
+                            .scaleEffect(model.strikeScale(at: now) * (0.94 + 0.06 * reveal))
                             .shadow(color: .black.opacity(0.65), radius: radius * 0.18, y: radius * 0.14)
                             .shadow(color: finish.ringGlow.opacity(elite ? 0.4 : 0.25), radius: radius * 0.4)
                             .position(center)
@@ -47,6 +83,7 @@ struct GongStageView: View {
                         anchor: .top,
                         perspective: 0.5
                     )
+                    .opacity(reveal)
 
                     // Contact flash.
                     Circle()
@@ -88,6 +125,14 @@ struct GongStageView: View {
                                     onStrike(velocity)
                                 }
                         )
+                        .accessibilityElement()
+                        .accessibilityLabel(elite ? "The golden gong" : "The gong")
+                        .accessibilityHint("Double tap to strike.")
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityAction {
+                            model.ceremonialStrike(elite: elite)
+                            onStrike(0.85)
+                        }
                 }
             }
         }

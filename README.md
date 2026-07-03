@@ -18,12 +18,14 @@ crest beneath the disc. Forever.
 | | |
 |---|---|
 | **UI** | Pure SwiftUI. Obsidian gallery background with drifting gold dust, a bronze gong suspended on silk cords beneath a gilded beam, and a Metal `colorEffect` shader that sweeps a light glint across the metal. |
-| **Interaction** | Touch the gong and a ceremonial mallet appears and draws back while you hold — release to strike. Hold longer, strike harder. |
+| **Interaction** | Touch the gong and a ceremonial mallet appears and draws back while you hold — release to strike. Hold longer, strike harder. Soft strikes sound rounder and darker; hard strikes release the full shimmer (a velocity-tracked low-pass on each voice). |
+| **Siri & Action button** | An App Intent — *"Siri, strike the Gong"* — summons the app and lands a ceremonial strike. Map it to the Action button, which is of course the correct use of an Action button. |
 | **Strike choreography** | Damped-spring wobble on the ropes, contact flash, three expanding ripples, and a deterministic burst of gold particles. Every animation is a pure function of time driven by a single `TimelineView` — there is no animation state to desynchronize. |
 | **Sound** | No audio files. The gong is *synthesized at launch* from 14 inharmonic partials (chau-gong ratios around G2) with per-partial decay, post-strike bloom, phase-modulated shimmer, a mallet-felt noise transient, and a Haas-widened stereo image, played through an 8-voice pool into a large-hall reverb. The Élite instrument is retuned ~2.3 semitones brighter. |
 | **Haptics** | Core Haptics: a hard transient at contact plus a decaying rumble that mirrors the ring-down. Falls back to `UIImpactFeedbackGenerator`. |
 | **Commerce** | StoreKit 2 non-consumable (`com.moonshineai.gong.elite999`), verified against `Transaction.currentEntitlements` on every launch, with restore support and an offline-friendly cache. |
 | **Ledger** | Every resonance is counted and displayed in Roman numerals, as is proper. |
+| **Presence** | The instrument is never static: a barely-perceptible idle sway, a breathing aura, and a ceremonial unveiling on every launch. Fully VoiceOver-strikeable, and Reduce Motion is honored (dust, sway, and the shimmer sweep stand down). |
 
 ## Requirements
 
@@ -72,6 +74,7 @@ Gong/
   GongModel.swift        Strike model; all animation curves as functions of time
   GongSoundEngine.swift  The synthesized instrument (AVAudioEngine)
   GongHaptics.swift      Core Haptics strike patterns
+  GongIntents.swift      App Intents: Siri / Shortcuts / Action button
   StoreManager.swift     StoreKit 2: the Élite upgrade
   EliteBoutiqueView.swift The paywall — sorry, the boutique
   Theme.swift            Design language: obsidian, bronze, aurum

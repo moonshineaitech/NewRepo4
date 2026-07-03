@@ -41,7 +41,19 @@ final class GongModel: ObservableObject {
         let windUp = min(max(held, 0), Self.maxWindUp) / Self.maxWindUp
         releaseWindUp = 1 - pow(1 - windUp, 2.2)
         let velocity = min(1.0, 0.34 + 0.66 * windUp)
+        register(velocity: velocity, elite: elite, at: date)
+        return velocity
+    }
 
+    /// A strike not delivered by hand — Siri, the Action button, VoiceOver.
+    /// Lands with the confident weight of a practiced attendant.
+    func ceremonialStrike(elite: Bool) {
+        releaseWindUp = 0.75
+        releasedAt = Date()
+        register(velocity: 0.85, elite: elite, at: Date())
+    }
+
+    private func register(velocity: Double, elite: Bool, at date: Date) {
         strikes.append(Strike(date: date, velocity: velocity, seed: UInt64.random(in: 0..<UInt64.max)))
         if strikes.count > 10 {
             strikes.removeFirst(strikes.count - 10)
@@ -49,7 +61,6 @@ final class GongModel: ObservableObject {
 
         GongSoundEngine.shared.strike(velocity: velocity, elite: elite)
         GongHaptics.shared.strike(velocity: velocity)
-        return velocity
     }
 
     // MARK: - Analytic animation curves

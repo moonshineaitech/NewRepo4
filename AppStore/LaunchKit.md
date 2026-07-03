@@ -70,3 +70,6 @@
    no leaderboard. If you have to ask who won, you don't own Gong."
 5. App Store screenshot captions: "It's a gong." / "It costs $100." /
    "The gold one costs more."
+6. **The Action button flex.** "I mapped my iPhone's Action button to a $100
+   gong" is a complete TikTok. "Siri, strike the Gong" at dinner parties is
+   another. Ship demo clips of both.

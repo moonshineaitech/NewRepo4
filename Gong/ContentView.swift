@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 struct ContentView: View {
@@ -6,6 +7,8 @@ struct ContentView: View {
     @StateObject private var model = GongModel()
     @AppStorage("gong.resonances") private var resonances = 0
     @State private var showEliteBoutique = false
+    @State private var unveiled = false
+    @State private var launchDate = Date()
 
     var body: some View {
         ZStack {
@@ -14,13 +17,17 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 header
                     .padding(.top, 18)
+                    .opacity(unveiled ? 1 : 0)
+                    .offset(y: unveiled ? 0 : -10)
 
-                GongStageView(model: model, elite: store.isElite) { _ in
+                GongStageView(model: model, elite: store.isElite, launchDate: launchDate) { _ in
                     resonances += 1
                 }
 
                 footer
                     .padding(.bottom, 26)
+                    .opacity(unveiled ? 1 : 0)
+                    .offset(y: unveiled ? 0 : 10)
             }
 
             VStack {
@@ -32,11 +39,35 @@ struct ContentView: View {
                 }
                 Spacer()
             }
+            .opacity(unveiled ? 1 : 0)
         }
         .sheet(isPresented: $showEliteBoutique) {
             EliteBoutiqueView()
                 .environmentObject(store)
         }
+        .onAppear {
+            withAnimation(.easeOut(duration: 1.6).delay(0.3)) {
+                unveiled = true
+            }
+            // A Siri/Action-button summons may have cold-launched the app.
+            if PendingCeremony.shared.strikeRequested {
+                PendingCeremony.shared.strikeRequested = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+                    performCeremony()
+                }
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: PendingCeremony.strikeNotification)) { _ in
+            if PendingCeremony.shared.strikeRequested {
+                PendingCeremony.shared.strikeRequested = false
+                performCeremony()
+            }
+        }
+    }
+
+    private func performCeremony() {
+        model.ceremonialStrike(elite: store.isElite)
+        resonances += 1
     }
 
     // MARK: - Chrome
