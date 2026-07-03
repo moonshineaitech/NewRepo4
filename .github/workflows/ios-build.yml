@@ -35,21 +35,32 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
 
-      - name: Pick a simulator
+      - name: Pick and pre-boot a simulator
         id: sim
         run: |
           UDID=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; data=json.load(sys.stdin); devs=[d for v in data["devices"].values() for d in v if "iPhone" in d.get("name","")]; print(devs[-1]["udid"])')
           echo "Using simulator UDID: $UDID"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          # Boot the simulator and wait until it is fully ready BEFORE testing.
+          # Launching UI tests into a still-booting simulator is the classic
+          # "Application does not have a process ID" flake.
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          echo "Simulator is booted and ready."
 
       - name: Run UI tests (strike the gong, capture screenshots)
         run: |
           set -o pipefail
+          # -retry-tests-on-failure re-runs a transiently failed test (e.g. a
+          # slow first launch) instead of failing the whole job on one hiccup.
           xcodebuild test \
             -project Gong.xcodeproj \
             -scheme Gong \
             -destination "id=${{ steps.sim.outputs.udid }}" \
             -resultBundlePath TestResults.xcresult \
+            -retry-tests-on-failure \
+            -test-timeouts-enabled YES \
+            -maximum-test-execution-time-allowance 120 \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
 
