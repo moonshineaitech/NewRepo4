@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		8A1000012E0000000000B00A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A1000012E0000000000A00A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A1000012E0000000000A006;
+			remoteInfo = Gong;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		8A1000012E0000000000A001 /* Gong.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gong.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A1000012E0000000000B001 /* GongUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GongUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -20,10 +31,26 @@
 			path = Gong;
 			sourceTree = "<group>";
 		};
+		8A1000012E0000000000B002 /* GongUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = GongUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		8A1000012E0000000000A003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A1000012E0000000000B003 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -37,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				8A1000012E0000000000A002 /* Gong */,
+				8A1000012E0000000000B002 /* GongUITests */,
 				8A1000012E0000000000A005 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				8A1000012E0000000000A001 /* Gong.app */,
+				8A1000012E0000000000B001 /* GongUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,6 +103,29 @@
 			productReference = 8A1000012E0000000000A001 /* Gong.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8A1000012E0000000000B006 /* GongUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A1000012E0000000000B007 /* Build configuration list for PBXNativeTarget "GongUITests" */;
+			buildPhases = (
+				8A1000012E0000000000B004 /* Sources */,
+				8A1000012E0000000000B003 /* Frameworks */,
+				8A1000012E0000000000B005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8A1000012E0000000000B00B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8A1000012E0000000000B002 /* GongUITests */,
+			);
+			name = GongUITests;
+			packageProductDependencies = (
+			);
+			productName = GongUITests;
+			productReference = 8A1000012E0000000000B001 /* GongUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -86,6 +138,10 @@
 				TargetAttributes = {
 					8A1000012E0000000000A006 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					8A1000012E0000000000B006 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 8A1000012E0000000000A006;
 					};
 				};
 			};
@@ -104,12 +160,20 @@
 			projectRoot = "";
 			targets = (
 				8A1000012E0000000000A006 /* Gong */,
+				8A1000012E0000000000B006 /* GongUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8A1000012E0000000000A009 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A1000012E0000000000B005 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -126,7 +190,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8A1000012E0000000000B004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8A1000012E0000000000B00B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8A1000012E0000000000A006 /* Gong */;
+			targetProxy = 8A1000012E0000000000B00A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		8A1000012E0000000000A00C /* Debug */ = {
@@ -311,6 +390,40 @@
 			};
 			name = Release;
 		};
+		8A1000012E0000000000B008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moonshineai.gong.GongUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Gong;
+			};
+			name = Debug;
+		};
+		8A1000012E0000000000B009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.moonshineai.gong.GongUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Gong;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -328,6 +441,15 @@
 			buildConfigurations = (
 				8A1000012E0000000000A00E /* Debug */,
 				8A1000012E0000000000A00F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A1000012E0000000000B007 /* Build configuration list for PBXNativeTarget "GongUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A1000012E0000000000B008 /* Debug */,
+				8A1000012E0000000000B009 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
