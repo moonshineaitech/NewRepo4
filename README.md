@@ -80,10 +80,39 @@ Gong/
   Theme.swift            Design language: obsidian, bronze, aurum
   Shaders.metal          The sweeping gold glint
   Gong.storekit          Local StoreKit test configuration
+  PrivacyInfo.xcprivacy  Privacy manifest (UserDefaults required-reason API)
   Assets.xcassets        App icon, accent color
-AppStore/                Launch copy, pricing, review notes
+GongUITests/             UI test: strike the gong, capture screenshots
+AppStore/
+  LaunchKit.md           Launch copy, keywords, pricing, viral playbook
+  SubmissionChecklist.md Every App Store requirement, with Gong's exact answers
+docs/
+  privacy.html           Hosted-ready Privacy Policy (for the required URL)
+  support.html           Hosted-ready Support page (for the required URL)
 PRIVACY.md               (Spoiler: we collect nothing)
 ```
+
+## Shipping to the App Store
+
+`AppStore/SubmissionChecklist.md` is the complete, Gong-specific walkthrough of
+everything App Review requires — App Privacy answers, age rating, the IAP setup,
+review notes, and the technical must-haves. The submission-critical pieces are
+already in the repo:
+
+- **Privacy manifest** (`Gong/PrivacyInfo.xcprivacy`) declaring the one
+  required-reason API Gong touches (`UserDefaults`), so uploads don't hit the
+  ITMS-91053 rejection.
+- **Export compliance** pre-answered (`ITSAppUsesNonExemptEncryption = NO`).
+- **Restore Purchases** in the boutique (required for the non-consumable).
+- **Privacy Policy & Support pages** in `docs/` — enable **GitHub Pages**
+  (Settings → Pages → `main` / `docs`) and they become the public URLs App Store
+  Connect requires.
+
+**Account deletion is not required:** Gong has no accounts or server, so
+Guideline 5.1.1(v) doesn't apply — the checklist documents the exemption for
+reviewers. The one genuine risk to read before submitting is **§8 (Guideline
+4.2 minimum functionality)** — a premium single-purpose app is scrutinized, and
+the checklist covers how to defend it.
 
 ## A note on Replit
 
