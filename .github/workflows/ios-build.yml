@@ -1,0 +1,73 @@
+name: iOS Build
+
+on:
+  push:
+    branches:
+      - main
+      - "claude/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build (iOS Simulator)
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select latest available Xcode
+        run: |
+          ls /Applications | grep Xcode
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -n1)"
+          xcodebuild -version
+
+      - name: Build Gong for iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Gong.xcodeproj \
+            -scheme Gong \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Pick a simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; data=json.load(sys.stdin); devs=[d for v in data["devices"].values() for d in v if "iPhone" in d.get("name","")]; print(devs[-1]["udid"])')
+          echo "Using simulator UDID: $UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Run UI tests (strike the gong, capture screenshots)
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Gong.xcodeproj \
+            -scheme Gong \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Export screenshots from result bundle
+        if: always()
+        run: |
+          mkdir -p screenshots
+          xcrun xcresulttool export attachments \
+            --path TestResults.xcresult \
+            --output-path screenshots || true
+          ls -R screenshots || true
+
+      - name: Upload screenshots and test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gong-evidence
+          path: |
+            screenshots
+            TestResults.xcresult
+          if-no-files-found: warn
